@@ -9,8 +9,6 @@ const LinkedList = () => {
   //Get last node in list
   const tail = () => {
     if (!headNode) return null;
-    // console.log(`In TAIL(), headNode =`)
-    // console.log(headNode);
     let next;
     if (headNode.nextNode) {
       next = headNode.nextNode;
@@ -272,4 +270,4 @@ const testList = () => {
   console.log(testList.toString());
 };
 
-testList();
+
