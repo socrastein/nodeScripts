@@ -1,36 +1,45 @@
 const LinkedList = () => {
-  headNode = null;
+  let headNode = null;
 
   //Get first node in list
-  head = () => {
+  const head = () => {
     return headNode;
   };
 
   //Get last node in list
-  tail = () => {
+  const tail = () => {
+    if (!headNode) return null;
+    // console.log(`In TAIL(), headNode =`)
+    // console.log(headNode);
     let next;
     if (headNode.nextNode) {
       next = headNode.nextNode;
     } else return headNode;
 
-    while (next !== null) {
+    while (true) {
+      if (next.nextNode === null) break;
       next = next.nextNode;
     }
     return next;
   };
 
   //Add new node to beginning of list
-  prepend = (value) => {
+  const prepend = (value) => {
     const newHeadNode = node(value, headNode);
     headNode = newHeadNode;
   };
 
   //Add new node to end of list
-  append = (value) => {
-    tail().nextNode = node(value, null);
+  const append = (value) => {
+    let last = tail();
+    if (last) {
+      last.nextNode = node(value, null);
+    } else {
+      headNode = node(value, null);
+    }
   };
 
-  size = () => {
+  const size = () => {
     let next;
     let length = 0;
 
@@ -48,23 +57,29 @@ const LinkedList = () => {
     return length;
   };
 
-  at = (index) => {
+  const at = (index) => {
     if (index === 0 && headNode) {
       return headNode;
     } else {
       let next = headNode;
       for (let i = 0; i < index; i++) {
-        next = next.nextNode;
+        if (next.nextNode) {
+          next = next.nextNode;
+        } else break;
       }
       return next;
     }
   };
 
-  pop = () => {
+  const pop = () => {
+    if (!headNode) return;
     let next;
     if (headNode.nextNode) {
       next = headNode.nextNode;
-    } else headNode = null;
+    } else {
+      headNode = null;
+      return;
+    }
 
     //While there's another node after the next one
     while (next.nextNode.nextNode !== null) {
@@ -73,11 +88,11 @@ const LinkedList = () => {
     next.nextNode = null;
   };
 
-  contains = (value) => {
+  const contains = (value) => {
     if (headNode.value === value) {
       return true;
     } else {
-      let string;
+      let next = headNode;
       while (next) {
         if (next.value === value) {
           return true;
@@ -88,53 +103,57 @@ const LinkedList = () => {
     }
   };
 
-  find = (value) => {
+  const find = (value) => {
     let index = 0;
     if (headNode.value === value) {
       return index;
     } else {
       let next = headNode.nextNode;
-      while (next) {
+      while (next !== null) {
         index++;
         if (next.value === value) {
           return index;
         }
+        next = next.nextNode;
       }
       return null;
     }
   };
 
-  toString = () => {
+  const toString = () => {
     let next;
     if (headNode) {
-      next = headNode.next;
+      next = headNode.nextNode;
     } else return "List is empty!";
     let string = `(${headNode.value})`;
-    while (next) {
-      string += ` -> (${next.value})`;
-      next = next.nextNode;
+
+    if (next) {
+      while (true) {
+        string += ` -> (${next.value})`;
+        next = next.nextNode;
+        if (next === null) break;
+      }
     }
+
     string += ` -> null`;
     return string;
   };
 
-  insertAt = (value, index) => {
+  const insertAt = (value, index) => {
     let previous = at(index - 1);
-    if (!previous) previous = tail();
-    if (previous.nextNode){
-        let newNode = node(value, previous.nextNode);
-        previous.nextNode = newNode;
-    }
+    if (previous === null) previous = tail();
+    let newNode = node(value, previous.nextNode);
+    previous.nextNode = newNode;
   };
 
-  removeAt = (index) => {
+  const removeAt = (index) => {
     let previous = at(index - 1);
-    if(!previous) return;
+    if (previous === null) return null;
 
     let node = previous.nextNode;
-    if(node){
-        previous.nextNode = node.nextNode;
-    } 
+    if (node) {
+      previous.nextNode = node.nextNode;
+    }
   };
 
   return {
@@ -161,3 +180,96 @@ const node = (value = null, nextNode = null) => {
 
   return node;
 };
+
+const testList = () => {
+  const testList = LinkedList();
+
+  console.log(`Head: ${testList.head()}`);
+  console.log(`Tail: ${testList.tail()}`);
+  console.log(`Size: ${testList.size()}`);
+
+  console.log("Appending 'First'");
+  testList.append("First");
+  console.log(`Head: ${testList.head().value}`);
+  console.log(`Tail: ${testList.tail().value}`);
+  console.log(`Size: ${testList.size()}`);
+
+  console.log("Appending 'Second'");
+  testList.append("Second");
+  console.log(`Head: ${testList.head().value}`);
+  console.log(`Tail: ${testList.tail().value}`);
+  console.log(`Size: ${testList.size()}`);
+
+  console.log("Appending 'Third'");
+  testList.append("Third");
+  console.log(`Head: ${testList.head().value}`);
+  console.log(`Tail: ${testList.tail().value}`);
+  console.log(`Size: ${testList.size()}`);
+
+  console.log("List so far:");
+  console.log(testList.toString());
+
+  console.log("Prepending node 'Zeroth'");
+  testList.prepend("Zeroth");
+  console.log(`Head: ${testList.head().value}`);
+  console.log(`Tail: ${testList.tail().value}`);
+
+  console.log(`Size: ${testList.size()}`);
+  console.log(`Node at Index 1:`);
+  console.log(testList.at(1));
+  console.log(`Node at Index 4:`);
+  console.log(testList.at(4));
+  console.log(`List contains 'Fourth': ${testList.contains("Fourth")}`);
+  console.log(`List contains 'Third': ${testList.contains("Third")}`);
+
+  console.log("Appending 'Fourth'");
+  testList.append("Fourth");
+  console.log(`List contains 'Fourth': ${testList.contains("Fourth")}`);
+  console.log(`Size: ${testList.size()}`);
+
+  console.log(`Find 'Second': ${testList.find("Second")}`);
+  console.log(`Find 'Fifth': ${testList.find("Fifth")}`);
+
+  console.log("List so far:");
+  console.log(testList.toString());
+
+  console.log("Inserting '2.5'");
+  testList.insertAt("2.5", 3);
+
+  console.log("List so far:");
+  console.log(testList.toString());
+
+  console.log(`Node at Index 20:`);
+  console.log(testList.at(20));
+
+  console.log("Inserting 'END'");
+  testList.insertAt("END", 11);
+
+  console.log("List so far:");
+  console.log(testList.toString());
+
+  console.log("Popping 2x nodes");
+  testList.pop();
+  testList.pop();
+  console.log(`Tail: ${testList.tail().value}`);
+
+  console.log(`Size: ${testList.size()}`);
+  console.log("List so far:");
+  console.log(testList.toString());
+
+  console.log("Removing '2.5'")
+  testList.removeAt(3);
+
+  console.log(`Size: ${testList.size()}`);
+  console.log("List so far:");
+  console.log(testList.toString());
+
+  console.log("Removing at Index 20")
+  testList.removeAt(20);
+
+  console.log(`Size: ${testList.size()}`);
+  console.log("List so far:");
+  console.log(testList.toString());
+};
+
+testList();
