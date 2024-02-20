@@ -1,4 +1,4 @@
-const LinkedList = () => {
+export const LinkedList = () => {
   let headNode = null;
 
   //Get first node in list
@@ -98,6 +98,38 @@ const LinkedList = () => {
         next = next.nextNode;
       }
       return false;
+    }
+  };
+
+  const containsKey = (key) => {
+    if (headNode.value[0] === key) {
+      return true;
+    } else {
+      let next = headNode;
+      while (next) {
+        if (next.value[0] === key) {
+          return true;
+        }
+        next = next.nextNode;
+      }
+      return false;
+    }
+  };
+
+  const findKey = (key) => {
+    let index = 0;
+    if (headNode.value[0] === key) {
+      return index;
+    } else {
+      let next = headNode.nextNode;
+      while (next) {
+        index++;
+        if (next.value[0] === key) {
+          return index;
+        }
+        next = next.nextNode;
+      }
+      return null;
     }
   };
 
@@ -255,19 +287,17 @@ const testList = () => {
   console.log("List so far:");
   console.log(testList.toString());
 
-  console.log("Removing '2.5'")
+  console.log("Removing '2.5'");
   testList.removeAt(3);
 
   console.log(`Size: ${testList.size()}`);
   console.log("List so far:");
   console.log(testList.toString());
 
-  console.log("Removing at Index 20")
+  console.log("Removing at Index 20");
   testList.removeAt(20);
 
   console.log(`Size: ${testList.size()}`);
   console.log("List so far:");
   console.log(testList.toString());
 };
-
-
