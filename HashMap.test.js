@@ -34,5 +34,44 @@ describe("HashMap.resize", () => {
     expect(hashMap.bucketArray.length).toBe(20);
   });
 
-  
+  test("add values and verifies number of entries then subtracts values and reverifies", () => {
+    const hashMap = new HashMap(10);
+    hashMap.set("key1", "value1");
+    hashMap.set("key2", "value2");
+    hashMap.set("key3", "value3");
+    hashMap.set("key4", "value4");
+    hashMap.set("key5", "value5");
+    hashMap.set("key6", "value6");
+    hashMap.set("key7", "value7");
+
+    expect(hashMap.entries().length).toBe(7);
+
+    hashMap.remove("key1");
+    hashMap.remove("key2");
+
+    expect(hashMap.entries().length).toBe(5);
+    expect(hashMap.has("key1")).toBe(false);
+    expect(hashMap.has("key2")).toBe(false);
+    expect(hashMap.has("key3")).toBe(true);
+  });
+
+  test("check that keys function returns the correct keys", () => {
+    const hashMap = new HashMap(10);
+    hashMap.set("key1", "value1");
+    hashMap.set("key2", "value2");
+    hashMap.set("key3", "value3");
+
+    const sorted = hashMap.keys().sort();
+    expect(sorted).toEqual(["key1", "key2", "key3"]);
+  });
+
+  test("check that values function returns the correct values", () => {
+    const hashMap = new HashMap();
+    hashMap.set("key1", "value1");
+    hashMap.set("key2", "value2");
+    hashMap.set("key3", "value3");
+
+    const sorted = hashMap.values().sort();
+    expect(sorted).toEqual(["value1", "value2", "value3"]);
+  });
 });
