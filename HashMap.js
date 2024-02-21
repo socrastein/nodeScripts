@@ -16,6 +16,15 @@ HashMap.prototype.hash = function (key) {
   return hashCode;
 };
 
+HashMap.prototype.resizeNeeded = function () {
+  const loadFactor = 0.75;
+  let bucketsFilled = 0;
+  this.bucketArray.forEach((list) => {
+    if (list.headNode) bucketsFilled++;
+  });
+  return bucketsFilled / this.bucketTotal > loadFactor;
+};
+
 HashMap.prototype.resize = function () {
   //Double the size of the current hashmap
   const bucketTotal = this.bucketTotal * 2;
@@ -44,6 +53,8 @@ HashMap.prototype.getList = function (key) {
 HashMap.prototype.set = function (key, value) {
   const list = this.getList(key);
   list.set(key, value);
+  //Check if load factor is surpassed and resize if needed
+  if (this.resizeNeeded()) this.resize();
 };
 
 HashMap.prototype.get = function (key) {
@@ -254,24 +265,4 @@ const node = (key = null, value = null, nextNode = null) => {
   return node;
 };
 
-module.exports = { HashMap }
-
-const testHash = new HashMap();
-
-console.log(testHash.hash("key 1"))
-console.log(testHash.hash("key 2"))
-
-
-testHash.set("key 1", "value 1")
-testHash.set("key 2", "value 2")
-
-console.log(testHash.bucketArray.length)
-console.log(testHash.entries())
-
-testHash.resize();
-
-console.log(testHash.hash("key 1"))
-console.log(testHash.hash("key 2"))
-
-console.log(testHash.bucketArray.length)
-console.log(testHash.entries())
+module.exports = { HashMap };
