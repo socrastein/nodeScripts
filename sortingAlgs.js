@@ -1,9 +1,3 @@
-export const sortingAlgs = {
-  bubble: bubbleSort,
-  selection: selectionSort,
-  merge: mergeSort,
-};
-
 /**
  * Bubble sorting algorithm with O(n**2) time complexity
  * O(n) if array is already sorted
@@ -87,4 +81,10 @@ const merge = (leftArray, rightArray) => {
     }
   }
   return [...sorted, ...leftArray, ...rightArray];
+};
+
+export const sortingAlgs = {
+  bubble: bubbleSort,
+  selection: selectionSort,
+  merge: mergeSort,
 };
