@@ -1,7 +1,7 @@
 import { sortingAlgs } from "./sortingAlgs.js";
 
 const Node = function (value) {
-  if (!value) return;
+  if (!value && value !== 0) return;
   this.value = value;
   this.left = null;
   this.right = null;
@@ -16,7 +16,7 @@ const BSTree = function (array) {
 };
 
 BSTree.prototype.insert = function (value) {
-  if (!value) return;
+  if (!value && value !== 0) return;
   let node = this.root;
   while (node) {
     if (value === node.value) return;
@@ -42,7 +42,7 @@ BSTree.prototype.insert = function (value) {
 };
 
 BSTree.prototype.delete = function (value) {
-  if (!value) return;
+  if (!value && value !== 0) return;
 
   let parent;
   let node = this.root;
@@ -106,7 +106,7 @@ BSTree.prototype.delete = function (value) {
 };
 
 BSTree.prototype.find = function (value) {
-  if (!value) return;
+  if (!value && value !== 0) return;
   let node = this.root;
   while (node) {
     if (value === node.value) return node;
@@ -171,6 +171,12 @@ BSTree.prototype.isBalanced = function () {
   };
   preOrder(this.root, compareSubTreeHeights);
   return balanced;
+};
+
+BSTree.prototype.rebalance = function () {
+  const treeArray = inOrder(this.root);
+  const end = treeArray.length - 1;
+  this.root = buildTree(treeArray, 0, end);
 };
 
 const buildTree = function (array, start, end) {
@@ -280,43 +286,60 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
   }
 };
 
-const testArray = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+const createRandomArray = (length) => {
+  const arr = [];
+  for (let i = 0; i < length; i++) {
+    const randInt = Math.floor(Math.random() * 100) + 1;
+    arr.push(randInt);
+  }
+  return arr;
+};
 
-const testTree = new BSTree(testArray);
+const testBST = () => {
+  const testArray = createRandomArray(25);
+  const tree = new BSTree(testArray);
 
-prettyPrint(testTree.root);
+  prettyPrint(tree.root);
 
-console.log("In Order:");
-console.log(inOrder(testTree.root));
+  console.log(`Tree is balanced: ${tree.isBalanced()}`);
 
-console.log("Pre Order:");
-console.log(preOrder(testTree.root));
+  console.log("Level order:");
+  console.log(levelOrder(tree.root));
 
-console.log("Post Order:");
-console.log(postOrder(testTree.root));
+  console.log("In order:");
+  console.log(inOrder(tree.root));
 
-console.log("Level Order:");
-console.log(levelOrder(testTree.root));
+  console.log("Pre order:");
+  console.log(preOrder(tree.root));
 
-prettyPrint(testTree.root);
+  console.log("Post order:");
+  console.log(postOrder(tree.root));
 
-let testNode = testTree.find(3);
+  tree.insert(105);
+  tree.insert(306);
+  tree.insert(400);
+  tree.insert(0)
 
-console.log(testTree.height(testNode));
+  prettyPrint(tree.root);
 
-console.log(`Balanced: ${testTree.isBalanced()}`)
+  console.log(`Tree is balanced: ${tree.isBalanced()}`);
+  tree.rebalance();
 
-testTree.insert(-1)
-testTree.insert(-2)
-testTree.insert(316)
-testTree.insert(315)
+  prettyPrint(tree.root);
 
-prettyPrint(testTree.root);
+  console.log(`Tree is balanced: ${tree.isBalanced()}`);
 
-console.log(`Balanced: ${testTree.isBalanced()}`)
+  console.log("Level order:");
+  console.log(levelOrder(tree.root));
 
-let node1 = testTree.find(324)
-console.log(node1)
-console.log(testTree.height(node1.left));
-console.log(testTree.height(node1.right));
+  console.log("In order:");
+  console.log(inOrder(tree.root));
 
+  console.log("Pre order:");
+  console.log(preOrder(tree.root));
+
+  console.log("Post order:");
+  console.log(postOrder(tree.root));
+};
+
+testBST();
