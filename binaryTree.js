@@ -125,7 +125,53 @@ BSTree.prototype.find = function (value) {
   }
 };
 
-let root = null;
+BSTree.prototype.height = function (node) {
+  if (node === null) {
+    return -1;
+  }
+  let leftHeight = this.height(node.left);
+  let rightHeight = this.height(node.right);
+  return Math.max(leftHeight, rightHeight) + 1;
+};
+
+BSTree.prototype.depth = function (node) {
+  let depth = 0;
+  let current = this.root;
+
+  while (current) {
+    if (current === node) return depth;
+    depth++;
+    if (node.value <= current.value) {
+      if (current.left) {
+        current = current.left;
+        continue;
+      } else return depth;
+    }
+    if (node.value > current.value) {
+      if (current.right) {
+        current = current.right;
+        continue;
+      }
+    } else return depth;
+  }
+};
+
+BSTree.prototype.size = function () {
+  return inOrder(this.root).length;
+};
+
+BSTree.prototype.isBalanced = function () {
+  let balanced = true;
+  const compareSubTreeHeights = (node) => {
+    const leftHeight = this.height(node.left);
+    const rightHeight = this.height(node.right);
+    if (Math.abs(leftHeight - rightHeight) > 1) {
+      balanced = false;
+    }
+  };
+  preOrder(this.root, compareSubTreeHeights);
+  return balanced;
+};
 
 const buildTree = function (array, start, end) {
   //Base case
@@ -252,6 +298,25 @@ console.log(postOrder(testTree.root));
 console.log("Level Order:");
 console.log(levelOrder(testTree.root));
 
-testTree.delete(8);
+prettyPrint(testTree.root);
+
+let testNode = testTree.find(3);
+
+console.log(testTree.height(testNode));
+
+console.log(`Balanced: ${testTree.isBalanced()}`)
+
+testTree.insert(-1)
+testTree.insert(-2)
+testTree.insert(316)
+testTree.insert(315)
 
 prettyPrint(testTree.root);
+
+console.log(`Balanced: ${testTree.isBalanced()}`)
+
+let node1 = testTree.find(324)
+console.log(node1)
+console.log(testTree.height(node1.left));
+console.log(testTree.height(node1.right));
+
