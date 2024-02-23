@@ -14,13 +14,11 @@ const BSTree = function (array) {
   this.root = buildTree(sortedSetArray, 0, end);
 };
 
-BSTree.prototype.insert = function (value) {}
+BSTree.prototype.insert = function (value) {};
 
-BSTree.prototype.delete = function (value) {}
+BSTree.prototype.delete = function (value) {};
 
-BSTree.prototype.find = function (value) {}
-
-
+BSTree.prototype.find = function (value) {};
 
 let root = null;
 
@@ -42,8 +40,9 @@ const buildTree = function (array, start, end) {
   return node;
 };
 
-const levelOrder = function (node, callback = null) {
+const levelOrder = function (node, callback = null, queue = []) {
   const arr = [];
+
   if (!callback) {
     callback = (node) => {
       arr.push(node.value);
@@ -52,8 +51,17 @@ const levelOrder = function (node, callback = null) {
   if (node === null) {
     return;
   }
-  const queue = [];
-}
+
+  callback(node);
+
+  if (node.left) queue.push(node.left);
+  if (node.right) queue.push(node.right);
+  if (queue.length === 0) return;
+  
+  levelOrder(queue.shift(), callback, queue);
+
+  return arr;
+};
 
 const inOrder = function (node, callback = null) {
   const arr = [];
@@ -71,17 +79,6 @@ const inOrder = function (node, callback = null) {
 
   return arr;
 };
-
-// const preOrder = function (node) {
-//   if (node === null) {
-//     return;
-//   }
-
-//   console.log(node.value);
-//   preOrder(node.left);
-//   preOrder(node.right);
-
-// };
 
 const preOrder = function (node, callback = null) {
   const arr = [];
@@ -116,7 +113,6 @@ const postOrder = function (node, callback = null) {
   postOrder(node.right, callback);
   callback(node);
 
-
   return arr;
 };
 
@@ -139,9 +135,14 @@ const testTree = new BSTree(testArray);
 
 prettyPrint(testTree.root);
 
-console.log("In Order:")
-console.log(inOrder(testTree.root))
-console.log("Pre Order:")
-console.log(preOrder(testTree.root))
-console.log("Post Order:")
-console.log(postOrder(testTree.root))
+console.log("In Order:");
+console.log(inOrder(testTree.root));
+
+console.log("Pre Order:");
+console.log(preOrder(testTree.root));
+
+console.log("Post Order:");
+console.log(postOrder(testTree.root));
+
+console.log("Level Order:");
+console.log(levelOrder(testTree.root));
