@@ -1,7 +1,7 @@
 import { sortingAlgs } from "./sortingAlgs.js";
 
 const Node = function (value) {
-  if (!value && value !== 0) return;
+  if (value === undefined) return;
   this.value = value;
   this.left = null;
   this.right = null;
@@ -16,7 +16,7 @@ const BSTree = function (array) {
 };
 
 BSTree.prototype.insert = function (value) {
-  if (!value && value !== 0) return;
+  if (value === undefined) return;
   let node = this.root;
   while (node) {
     if (value === node.value) return;
@@ -42,7 +42,7 @@ BSTree.prototype.insert = function (value) {
 };
 
 BSTree.prototype.delete = function (value) {
-  if (!value && value !== 0) return;
+  if (value === undefined) return;
 
   let parent;
   let node = this.root;
@@ -106,7 +106,7 @@ BSTree.prototype.delete = function (value) {
 };
 
 BSTree.prototype.find = function (value) {
-  if (!value && value !== 0) return;
+  if (value === undefined) return;
   let node = this.root;
   while (node) {
     if (value === node.value) return node;
@@ -340,6 +340,8 @@ const testBST = () => {
 
   console.log("Post order:");
   console.log(postOrder(tree.root));
+
+  console.log(tree.find(0))
 };
 
 testBST();
