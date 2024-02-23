@@ -1,6 +1,7 @@
 import { sortingAlgs } from "./sortingAlgs.js";
 
 const Node = function (value) {
+  if (!value) return;
   this.value = value;
   this.left = null;
   this.right = null;
@@ -14,11 +15,115 @@ const BSTree = function (array) {
   this.root = buildTree(sortedSetArray, 0, end);
 };
 
-BSTree.prototype.insert = function (value) {};
+BSTree.prototype.insert = function (value) {
+  if (!value) return;
+  let node = this.root;
+  while (node) {
+    if (value === node.value) return;
+    if (value <= node.value) {
+      if (node.left) {
+        node = node.left;
+        continue;
+      } else {
+        node.left = new Node(value);
+        return;
+      }
+    }
+    if (value > node.value) {
+      if (node.right) {
+        node = node.right;
+        continue;
+      } else {
+        node.right = new Node(value);
+        return;
+      }
+    }
+  }
+};
 
-BSTree.prototype.delete = function (value) {};
+BSTree.prototype.delete = function (value) {
+  if (!value) return;
 
-BSTree.prototype.find = function (value) {};
+  let parent;
+  let node = this.root;
+  while (node) {
+    if (value === node.value) break;
+    if (value <= node.value) {
+      if (node.left) {
+        parent = node;
+        node = node.left;
+        continue;
+      } else return null;
+    }
+    if (value > node.value) {
+      if (node.right) {
+        parent = node;
+        node = node.right;
+        continue;
+      } else return null;
+    }
+  }
+
+  //If node has no children, delete its reference from parent node
+  if (!node.left && !node.right) {
+    if (parent.left === node) {
+      parent.left = null;
+    } else parent.right = null;
+    return;
+  }
+
+  //If node has one left child, switch parent reference to node's left child
+  if (node.left && !node.right) {
+    if (parent.left === node) {
+      parent.left = node.left;
+    } else parent.right = node.left;
+    return;
+  }
+
+  //If node has one right child, switch parent reference to node's right child
+  if (!node.left && node.right) {
+    if (parent.left === node) {
+      parent.left = node.right;
+    } else parent.right = node.right;
+    return;
+  }
+
+  //If node has two children, find smallest right child and replace node with it
+  if (node.left && node.right) {
+    let smallestParent;
+    let smallest = node.right;
+    while (true) {
+      if (smallest.left) {
+        smallestParent = smallest;
+        smallest = smallest.left;
+      } else break;
+    }
+    node.value = smallest.value;
+    if (smallestParent && smallest.right) {
+      smallestParent.left = smallest.right;
+    } else node.right = smallest.right;
+  }
+};
+
+BSTree.prototype.find = function (value) {
+  if (!value) return;
+  let node = this.root;
+  while (node) {
+    if (value === node.value) return node;
+    if (value <= node.value) {
+      if (node.left) {
+        node = node.left;
+        continue;
+      } else return null;
+    }
+    if (value > node.value) {
+      if (node.right) {
+        node = node.right;
+        continue;
+      }
+    } else return null;
+  }
+};
 
 let root = null;
 
@@ -57,7 +162,7 @@ const levelOrder = function (node, callback = null, queue = []) {
   if (node.left) queue.push(node.left);
   if (node.right) queue.push(node.right);
   if (queue.length === 0) return;
-  
+
   levelOrder(queue.shift(), callback, queue);
 
   return arr;
@@ -146,3 +251,7 @@ console.log(postOrder(testTree.root));
 
 console.log("Level Order:");
 console.log(levelOrder(testTree.root));
+
+testTree.delete(8);
+
+prettyPrint(testTree.root);
